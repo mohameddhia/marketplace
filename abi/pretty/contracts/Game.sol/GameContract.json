@@ -1,0 +1,15 @@
+[
+  "constructor()",
+  "event GetGameOutcome(uint8)",
+  "function compareStrings(string,string) view returns (bool)",
+  "function deposit() payable",
+  "function endGame(string,string,string)",
+  "function games(string) view returns (address, address, uint256, string, string, string, uint8, uint8)",
+  "function getGameDetails(string) view returns (string)",
+  "function getPlayerBalance(address) view returns (uint256)",
+  "function outcomes(uint8) view returns (string)",
+  "function participateGame(string)",
+  "function playerBalances(address) view returns (uint256)",
+  "function startGame(string,string,address,uint256)",
+  "function withdraw()"
+]
