@@ -5,9 +5,11 @@ const app = express();
 let marketplace = require('./utils/marketplace');
 const { ethers, Wallet } = require("ethers");
 const game = require('./utils/game');
+const nftoken = require('./utils/nft')
 const eytoken = require('./utils/eytoken')
 const marketplaceAddress = process.env.MarketPlace;
 const gameAddress = process.env.Game;
+const nftAddress = process.env.NFT;
 const tokenAddress = process.env.EYTOKEN;
 app.use(express.json())
 
@@ -208,7 +210,7 @@ app.post("/approvertransfer", (req, res) => {
 	const amount = req.body.amount
 
 	const token = new eytoken(contractAddr, Provider, privKey);
-	game.approvetx(spenderAddress, amount).then((resp) => {
+	token.approvetx(spenderAddress, amount).then((resp) => {
 		// convert a currency unit from wei to ether
 		res.end(JSON.stringify(resp));
 	})
@@ -223,7 +225,33 @@ app.post("/tranferfrom", (req, res) => {
 	const toAddress = req.body.toAddress;
 	const amount = req.body.amount;
 	const token = new eytoken(contractAddr, Provider, privKey);
-	game.transferFrom(spenderAddress, amount).then((resp) => {
+	token.transferFrom(spenderAddress, amount).then((resp) => {
+		// convert a currency unit from wei to ether
+		res.end(JSON.stringify(resp));
+	})
+})
+
+app.post("/creategamenft", (req, res) => {
+	const Provider = req.body.Provider;
+	const contractAddr = nftAddress;
+	const privKey = req.body.privKey;
+	const tokenURI = req.body.tokenURI;
+	const token = new nftoken(contractAddr, Provider, privKey);
+	token.createToken(tokenURI).then((resp) => {
+		// convert a currency unit from wei to ether
+		res.end(JSON.stringify(resp));
+	})
+})
+
+app.post("/transfernft", (req, res) => {
+	const Provider = req.body.Provider;
+	const contractAddr = nftAddress;
+	const privKey = req.body.privKey;
+	const fromAddress = req.body.fromAddress;
+	const toAddress = req.body.toAddress;
+	const tokenURI = req.body.tokenURI;
+	const token = new nftoken(contractAddr, Provider, privKey);
+	token.transferToken(fromAddress, toAddress, tokenURI).then((resp) => {
 		// convert a currency unit from wei to ether
 		res.end(JSON.stringify(resp));
 	})
