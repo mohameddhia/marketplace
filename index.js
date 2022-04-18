@@ -5,8 +5,10 @@ const app = express();
 let marketplace = require('./utils/marketplace');
 const { ethers, Wallet } = require("ethers");
 const game = require('./utils/game');
+const eytoken = require('./utils/eytoken')
 const marketplaceAddress = process.env.MarketPlace;
-const gameAddress = process.env.Game
+const gameAddress = process.env.Game;
+const tokenAddress = process.env.EYTOKEN;
 app.use(express.json())
 
 app.get('/CreateWallet', (req, res) => {
@@ -197,7 +199,35 @@ app.post("/getGameDetails", (req, res) => {
 	})
 })
 
+app.post("/approvertransfer", (req, res) => {
 
+	const Provider = req.body.Provider;
+	const contractAddr = tokenAddress;
+	const privKey = req.body.privKey;
+	const spenderAddress = req.body.spenderAddress;
+	const amount = req.body.amount
+
+	const token = new eytoken(contractAddr, Provider, privKey);
+	game.approvetx(spenderAddress, amount).then((resp) => {
+		// convert a currency unit from wei to ether
+		res.end(JSON.stringify(resp));
+	})
+
+})
+
+app.post("/tranferfrom", (req, res) => {
+	const Provider = req.body.Provider;
+	const contractAddr = tokenAddress;
+	const privKey = req.body.privKey;
+	const fromAddress = req.body.fromAddress;
+	const toAddress = req.body.toAddress;
+	const amount = req.body.amount;
+	const token = new eytoken(contractAddr, Provider, privKey);
+	game.transferFrom(spenderAddress, amount).then((resp) => {
+		// convert a currency unit from wei to ether
+		res.end(JSON.stringify(resp));
+	})
+})
 app.listen(8080, () => {
 	console.log("Serveur à l'écoute port 8080")
 })
